@@ -6,20 +6,22 @@
 #include <Wire.h>
 //#include <Adafruit_Sensor.h>
 //#include <Adafruit_BME280.h>
+
+
 //Default Temperature is in Celsius
 //Comment the next line for Temperature in Fahrenheit
 #define temperatureCelsius
 
-//BLE server name
-#define bleServerName "BME280_ESP32"
+//BLE Sunucu Adı
+#define bleServerName "ESP32_Sunucu"
 
-Adafruit_BME280 bme; // I2C
+//Adafruit_BME280 bme; // I2C
 
 float temp;
 float tempF;
 float hum;
 
-// Timer variables
+// State machine değişkenleri
 unsigned long lastTime = 0;
 unsigned long timerDelay = 30000;
 
