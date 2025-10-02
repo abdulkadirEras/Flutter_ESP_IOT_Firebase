@@ -27,6 +27,8 @@ unsigned long zamanlayiciSuresi = 30000;
 
 bool cihazBagliMi = false;
 
+uint16_t rastgeleSayi;
+
 // UUIDs üretmek için bu siteyi kullanabilirsiniz:
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID "91bad492-b950-4226-aa2b-4ede9fa42f59"
@@ -45,12 +47,12 @@ BLECharacteristic bmeHumidityCharacteristics("ca73b3ba-39f6-4ab3-91ae-186dc9577d
 BLEDescriptor bmeHumidityDescriptor(BLEUUID((uint16_t)0x2903));
 
 //Setup callbacks onConnect and onDisconnect
-class MyServerCallbacks: public BLEServerCallbacks {
+class sunucuCallBacklerim: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
-    deviceConnected = true;
+    cihazBagliMi = true;
   };
   void onDisconnect(BLEServer* pServer) {
-    deviceConnected = false;
+    cihazBagliMi = false;
   }
 };
 
@@ -74,7 +76,7 @@ void setup()
 
   // BLE Sunucunu oluştur ve callback'leri ayarla
   BLEServer *pServer = BLEDevice::createServer();
-  pServer->setCallbacks(new MyServerCallbacks());
+  pServer->setCallbacks(new sunucuCallBacklerim());
 
   // BLE servisini oluştur
   BLEService *bmeService = pServer->createService(SERVICE_UUID);
@@ -108,7 +110,7 @@ void setup()
 
 void loop() 
 {
-  uint16_t rastgeleSayi = random(1, 1000 + 1);
+   rastgeleSayi = random(1, 1000 + 1);
   if (cihazBagliMi) {
     if ((millis() - sonZaman) > zamanlayiciSuresi) 
     {
