@@ -22,10 +22,10 @@ float tempF;
 float hum;
 
 // State machine değişkenleri
-unsigned long lastTime = 0;
-unsigned long timerDelay = 30000;
+unsigned long sonZaman = 0;
+unsigned long zamanlayiciSuresi = 30000;
 
-bool deviceConnected = false;
+bool cihazBagliMi = false;
 
 // UUIDs üretmek için bu siteyi kullanabilirsiniz:
 // https://www.uuidgenerator.net/
@@ -106,10 +106,12 @@ void setup()
   Serial.println("Istemci baglantisi bekleniyor...");
 }
 
-void loop() {
+void loop() 
+{
   uint16_t rastgeleSayi = random(1, 1000 + 1);
-  if (deviceConnected) {
-    if ((millis() - lastTime) > timerDelay) {
+  if (cihazBagliMi) {
+    if ((millis() - sonZaman) > zamanlayiciSuresi) 
+    {
       // Read temperature as Celsius (the default)
       temp = bme.readTemperature();
       // Fahrenheit
@@ -148,7 +150,9 @@ void loop() {
       Serial.print(hum);
       Serial.println(" %");
       
-      lastTime = millis();
+      sonZaman = millis();
     }
   }
 }
+
+
