@@ -13,7 +13,7 @@
 #define temperatureCelsius
 
 //BLE Sunucu Adı
-#define bleServerName "ESP32_Sunucu"
+#define bleSunucuAdi "ESP32_Sunucu"
 
 //Adafruit_BME280 bme; // I2C
 
@@ -27,7 +27,7 @@ unsigned long timerDelay = 30000;
 
 bool deviceConnected = false;
 
-// See the following for generating UUIDs:
+// UUIDs üretmek için bu siteyi kullanabilirsiniz:
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID "91bad492-b950-4226-aa2b-4ede9fa42f59"
 
@@ -62,14 +62,14 @@ void initBME(){
 }
 
 void setup() {
-  // Start serial communication 
+  // Uart haberleşmesini başlat
   Serial.begin(115200);
 
   // Init BME Sensor
   initBME();
 
   // Create the BLE Device
-  BLEDevice::init(bleServerName);
+  BLEDevice::init(bleSunucuAdi);
 
   // Create the BLE Server
   BLEServer *pServer = BLEDevice::createServer();
@@ -102,10 +102,11 @@ void setup() {
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pServer->getAdvertising()->start();
-  Serial.println("Waiting a client connection to notify...");
+  Serial.println("Istemci baglantisi bekleniyor...");
 }
 
 void loop() {
+  uint16_t rastgeleSayi = random(1, 1000 + 1);
   if (deviceConnected) {
     if ((millis() - lastTime) > timerDelay) {
       // Read temperature as Celsius (the default)
