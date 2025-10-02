@@ -10,7 +10,7 @@
 
 //Default Temperature is in Celsius
 //Comment the next line for Temperature in Fahrenheit
-#define temperatureCelsius
+#define rastgeleSayi1kullan
 
 //BLE Sunucu Adı
 #define bleSunucuAdi "ESP32_Sunucu"
@@ -28,25 +28,22 @@ unsigned long zamanlayiciSuresi = 30000;
 bool cihazBagliMi = false;
 
 uint16_t rastgeleSayi;
+uint16_t rastgeleSayi2;
 
 // UUIDs üretmek için bu siteyi kullanabilirsiniz:
 // https://www.uuidgenerator.net/
 #define SERVICE_UUID "91bad492-b950-4226-aa2b-4ede9fa42f59"
 
-// Temperature Characteristic and Descriptor
-#ifdef temperatureCelsius
-  BLECharacteristic bmeTemperatureCelsiusCharacteristics("cba1d466-344c-4be3-ab3f-189f80dd7518", BLECharacteristic::PROPERTY_NOTIFY);
-  BLEDescriptor bmeTemperatureCelsiusDescriptor(BLEUUID((uint16_t)0x2902));
-#else
-  BLECharacteristic bmeTemperatureFahrenheitCharacteristics("f78ebbff-c8b7-4107-93de-889a6a06d408", BLECharacteristic::PROPERTY_NOTIFY);
-  BLEDescriptor bmeTemperatureFahrenheitDescriptor(BLEUUID((uint16_t)0x2902));
-#endif
+// rastgele sayı 1 için Characteristic ve Descriptor tanımları
+BLECharacteristic rastgeleSayi1Characteristics("cba1d466-344c-4be3-ab3f-189f80dd7518", BLECharacteristic::PROPERTY_NOTIFY);
+BLEDescriptor rastgeleSayi1Descriptor(BLEUUID((uint16_t)0x2902));
 
-// Humidity Characteristic and Descriptor
+
+// rastgele sayı 2 için Characteristic ve Descriptor tanımları
 BLECharacteristic bmeHumidityCharacteristics("ca73b3ba-39f6-4ab3-91ae-186dc9577d99", BLECharacteristic::PROPERTY_NOTIFY);
 BLEDescriptor bmeHumidityDescriptor(BLEUUID((uint16_t)0x2903));
 
-//Setup callbacks onConnect and onDisconnect
+//bağlantı kontrolleri için callback sınıfı oluşturulması
 class sunucuCallBacklerim: public BLEServerCallbacks {
   void onConnect(BLEServer* pServer) {
     cihazBagliMi = true;
@@ -56,20 +53,13 @@ class sunucuCallBacklerim: public BLEServerCallbacks {
   }
 };
 
-void initBME(){
-  if (!bme.begin(0x76)) {
-    Serial.println("Could not find a valid BME280 sensor, check wiring!");
-    while (1);
-  }
-}
+
 
 void setup() 
 {
   // Uart haberleşmesini başlat
   Serial.begin(115200);
 
-  // Init BME Sensor
-  initBME();
 
   // BLE Cihazını başlat
   BLEDevice::init(bleSunucuAdi);
@@ -79,29 +69,23 @@ void setup()
   pServer->setCallbacks(new sunucuCallBacklerim());
 
   // BLE servisini oluştur
-  BLEService *bmeService = pServer->createService(SERVICE_UUID);
+  BLEService *rastgeleSayiService = pServer->createService(SERVICE_UUID);
 
-  // Create BLE Characteristics and Create a BLE Descriptor
-  // Temperature
-  #ifdef temperatureCelsius
-    bmeService->addCharacteristic(&bmeTemperatureCelsiusCharacteristics);
-    bmeTemperatureCelsiusDescriptor.setValue("BME temperature Celsius");
-    bmeTemperatureCelsiusCharacteristics.addDescriptor(&bmeTemperatureCelsiusDescriptor);
-  #else
-    bmeService->addCharacteristic(&bmeTemperatureFahrenheitCharacteristics);
-    bmeTemperatureFahrenheitDescriptor.setValue("BME temperature Fahrenheit");
-    bmeTemperatureFahrenheitCharacteristics.addDescriptor(&bmeTemperatureFahrenheitDescriptor);
-  #endif  
+  // rastgele sayı 1 için BLE Characteristics ve BLE Descriptor eklenmesi
+  rastgeleSayiService->addCharacteristic(&rastgeleSayi1Characteristics);
+  rastgeleSayi1Characteristics.setValue("BME temperature Celsius");
+  rastgeleSayi1Characteristics.addDescriptor(&rastgeleSayi1Descriptor);
 
-  // Humidity
-  bmeService->addCharacteristic(&bmeHumidityCharacteristics);
+
+  // rastgele sayı 2 için BLE Characteristics ve BLE Descriptor eklenmesi
+  rastgeleSayiService->addCharacteristic(&bmeHumidityCharacteristics);
   bmeHumidityDescriptor.setValue("BME humidity");
   bmeHumidityCharacteristics.addDescriptor(new BLE2902());
   
-  // Start the service
-  bmeService->start();
+  // Service başlat
+  rastgeleSayiService->start();
 
-  // Start advertising
+  // yayınlamayı başlat
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
   pAdvertising->addServiceUUID(SERVICE_UUID);
   pServer->getAdvertising()->start();
@@ -111,46 +95,29 @@ void setup()
 void loop() 
 {
    rastgeleSayi = random(1, 1000 + 1);
-  if (cihazBagliMi) {
+   rastgeleSayi2 = random(1, 1000 + 1);
+
+  if (cihazBagliMi) 
+  {
     if ((millis() - sonZaman) > zamanlayiciSuresi) 
     {
-      // Read temperature as Celsius (the default)
-      temp = bme.readTemperature();
-      // Fahrenheit
-      tempF = 1.8*temp +32;
-      // Read humidity
-      hum = bme.readHumidity();
-  
-      //Notify temperature reading from BME sensor
-      #ifdef temperatureCelsius
-        static char temperatureCTemp[6];
-        dtostrf(temp, 6, 2, temperatureCTemp);
-        //Set temperature Characteristic value and notify connected client
-        bmeTemperatureCelsiusCharacteristics.setValue(temperatureCTemp);
-        bmeTemperatureCelsiusCharacteristics.notify();
-        Serial.print("Temperature Celsius: ");
-        Serial.print(temp);
-        Serial.print(" ºC");
-      #else
-        static char temperatureFTemp[6];
-        dtostrf(tempF, 6, 2, temperatureFTemp);
-        //Set temperature Characteristic value and notify connected client
-        bmeTemperatureFahrenheitCharacteristics.setValue(temperatureFTemp);
-        bmeTemperatureFahrenheitCharacteristics.notify();
-        Serial.print("Temperature Fahrenheit: ");
-        Serial.print(tempF);
-        Serial.print(" ºF");
-      #endif
+ 
+      static char rastgeleSayiChar[6];
+      dtostrf(rastgeleSayi, 6, 2, rastgeleSayiChar);
+      //rastgele sayi 1 Characteristic değerini ayarla ve istemciye bildir
+      rastgeleSayi1Characteristics.setValue(rastgeleSayiChar);
+      rastgeleSayi1Characteristics.notify();
+      Serial.print("rastgele sayi 1: ");
+      Serial.println(rastgeleSayi);
+     
       
-      //Notify humidity reading from BME
-      static char humidityTemp[6];
-      dtostrf(hum, 6, 2, humidityTemp);
-      //Set humidity Characteristic value and notify connected client
-      bmeHumidityCharacteristics.setValue(humidityTemp);
+      static char rastgeleSayiChar2[6];
+      dtostrf(rastgeleSayi2, 6, 2, rastgeleSayiChar2);
+      //rastgele sayi 2 Characteristic değerini ayarla ve istemciye bildir
+      bmeHumidityCharacteristics.setValue(rastgeleSayiChar2);
       bmeHumidityCharacteristics.notify();   
-      Serial.print(" - Humidity: ");
-      Serial.print(hum);
-      Serial.println(" %");
+      Serial.print(" rastgele sayi 2: ");
+      Serial.println(rastgeleSayi2);
       
       sonZaman = millis();
     }
