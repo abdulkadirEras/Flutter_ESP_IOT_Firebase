@@ -9,11 +9,6 @@
 //BLE Sunucu Adı
 #define bleSunucuAdi "ESP32_Sunucu"
 
-//Adafruit_BME280 bme; // I2C
-
-float temp;
-float tempF;
-float hum;
 
 // State machine değişkenleri
 unsigned long sonZaman = 0;
@@ -38,11 +33,14 @@ BLECharacteristic bmeHumidityCharacteristics("ca73b3ba-39f6-4ab3-91ae-186dc9577d
 BLEDescriptor bmeHumidityDescriptor(BLEUUID((uint16_t)0x2903));
 
 //bağlantı kontrolleri için callback sınıfı oluşturulması
-class sunucuCallBacklerim: public BLEServerCallbacks {
-  void onConnect(BLEServer* pServer) {
+class sunucuCallBacklerim: public BLEServerCallbacks 
+{
+  void onConnect(BLEServer* pServer) 
+  {
     cihazBagliMi = true;
   };
-  void onDisconnect(BLEServer* pServer) {
+  void onDisconnect(BLEServer* pServer) 
+  {
     cihazBagliMi = false;
   }
 };
