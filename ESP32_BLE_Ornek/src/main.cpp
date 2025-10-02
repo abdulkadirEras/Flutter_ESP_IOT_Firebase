@@ -61,21 +61,22 @@ void initBME(){
   }
 }
 
-void setup() {
+void setup() 
+{
   // Uart haberleşmesini başlat
   Serial.begin(115200);
 
   // Init BME Sensor
   initBME();
 
-  // Create the BLE Device
+  // BLE Cihazını başlat
   BLEDevice::init(bleSunucuAdi);
 
-  // Create the BLE Server
+  // BLE Sunucunu oluştur ve callback'leri ayarla
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(new MyServerCallbacks());
 
-  // Create the BLE Service
+  // BLE servisini oluştur
   BLEService *bmeService = pServer->createService(SERVICE_UUID);
 
   // Create BLE Characteristics and Create a BLE Descriptor
