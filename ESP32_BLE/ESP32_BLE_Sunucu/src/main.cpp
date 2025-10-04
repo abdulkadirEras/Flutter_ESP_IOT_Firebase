@@ -12,7 +12,7 @@
 
 // State machine değişkenleri
 unsigned long sonZaman = 0;
-unsigned long zamanlayiciSuresi = 30000;
+unsigned long zamanlayiciSuresi = 1000;
 
 bool cihazBagliMi = false;
 
