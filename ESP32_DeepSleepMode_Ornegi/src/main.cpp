@@ -2,10 +2,40 @@
 #include "driver/rtc_io.h"
 
 #define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
-#define USE_EXT0_WAKEUP          1               // 1 = EXT0 wakeup, 0 = EXT1 wakeup
+#define KULLANILACAK_WAKEUP         1               // 1 = EXT0 , 0 = EXT1 , 2 = zamanlayıcı, 3 = Touchpad (Uyandrıma yöntemi seçimi)
 #define WAKEUP_GPIO              GPIO_NUM_33     // Only RTC IO are allowed - ESP32 Pin example
 RTC_DATA_ATTR int bootCount = 0;
 
+
+void uykudan_uyanma_nedenini_yazdir();
+void uyandirma_kaynaklarini_yapilandir();
+
+void setup() 
+{
+  Serial.begin(115200);
+  
+
+  //önyükleme numarasını artırın ve her yeniden başlatmayı yazdırın
+  ++bootCount;
+  Serial.println("Onyukleme sayisi: " + String(bootCount));
+
+  
+  uykudan_uyanma_nedenini_yazdir();
+
+
+
+
+  uyandirma_kaynaklarini_yapilandir();
+  
+  Serial.println("Simdi derin uyku moduna geciyor...");
+  esp_deep_sleep_start();//Derin uyku moduna geç
+  Serial.println("Bu cumle asla basilmayacak");
+}
+
+void loop() 
+{
+  //Buna çağrılmayacak
+}
 
 
 void uykudan_uyanma_nedenini_yazdir() 
@@ -25,19 +55,9 @@ void uykudan_uyanma_nedenini_yazdir()
   }
 }
 
-void setup() 
+void uyandirma_kaynaklarini_yapilandir()
 {
-  Serial.begin(115200);
-  
-
-  //önyükleme numarasını artırın ve her yeniden başlatmayı yazdırın
-  ++bootCount;
-  Serial.println("Onyukleme sayisi: " + String(bootCount));
-
-  
-  uykudan_uyanma_nedenini_yazdir();
-
-  /*
+   /*
     Önce uyanma kaynağını yapılandırırız
     ESP32'mizi harici bir tetikleyiciye uyandırdık.
     ESP32, Ext0 ve Ext1 için iki tür vardır.
@@ -47,7 +67,7 @@ void setup()
     Dahili pullups/pulldowns kullanmanın da gerektirdiğini unutmayın.
     RTC çevre birimleri açılacak.
   */
-#if USE_EXT0_WAKEUP
+#if KULLANILACAK_WAKEUP==1
   esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO, 1);  //1 = High, 0 = Low
   /*
    Derin uyku sırasında uyandırma pinlerini aktif olmayan seviyeye bağlamak için RTCIO üzerinden çekme/çıkışları yapılandırın.
@@ -57,7 +77,14 @@ void setup()
   rtc_gpio_pullup_dis(WAKEUP_GPIO);
   rtc_gpio_pulldown_en(WAKEUP_GPIO);
 
-#else  // EXT1 WAKEUP
+#elif KULLANILACAK_WAKEUP==2
+  // Timer ile uyandırmayı etkinleştir
+  esp_sleep_enable_timer_wakeup(10 * 1000000); // 10 saniye (mikrosan iye cinsinden)
+
+#elif KULLANILACAK_WAKEUP==3
+  // Touch pad ile uyandırmayı etkinleştir
+  touchSleepWakeUpEnable()
+#else // EXT1 WAKEUP
   
   esp_sleep_enable_ext1_wakeup_io(BUTTON_PIN_BITMASK(WAKEUP_GPIO), ESP_EXT1_WAKEUP_ANY_HIGH);
   /*
@@ -68,14 +95,5 @@ void setup()
   */
   rtc_gpio_pulldown_en(WAKEUP_GPIO);  // GPIO33, HIGH'da uyanmak için GND'ye bağlamıştır
   rtc_gpio_pullup_dis(WAKEUP_GPIO);   // HIGH'da uyanmasına izin vermek için pull_up'u devre dışı bırakın
-#endif
-  
-  Serial.println("Simdi derin uyku moduna geciyor...");
-  esp_deep_sleep_start();
-  Serial.println("Bu cumle asla basilmayacak");
-}
-
-void loop() 
-{
-  //Buna çağrılmayacak
+  #endif
 }
