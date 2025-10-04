@@ -6,10 +6,8 @@
 #define WAKEUP_GPIO              GPIO_NUM_33     // Only RTC IO are allowed - ESP32 Pin example
 RTC_DATA_ATTR int bootCount = 0;
 
-/*
-  Method to print the reason by which ESP32
-  has been awaken from sleep
-*/
+
+
 void uykudan_uyanma_nedenini_yazdir() 
 {
   esp_sleep_wakeup_cause_t wakeup_reason;
@@ -17,7 +15,7 @@ void uykudan_uyanma_nedenini_yazdir()
   wakeup_reason = esp_sleep_get_wakeup_cause();
 
   switch (wakeup_reason) 
-  {//RTC_CNTL harici sinyal ile uyandi.
+  {
     case ESP_SLEEP_WAKEUP_EXT0:     Serial.println("RTC_IO harici sinyal ile uyandi."); break;
     case ESP_SLEEP_WAKEUP_EXT1:     Serial.println("RTC_CNTL harici sinyal ile uyandi."); break;
     case ESP_SLEEP_WAKEUP_TIMER:    Serial.println("Timer ile uyandi."); break;
@@ -27,32 +25,35 @@ void uykudan_uyanma_nedenini_yazdir()
   }
 }
 
-void setup() {
+void setup() 
+{
   Serial.begin(115200);
-  delay(1000);  //Take some time to open up the Serial Monitor
+  
 
-  //Increment boot number and print it every reboot
+  //önyükleme numarasını artırın ve her yeniden başlatmayı yazdırın
   ++bootCount;
-  Serial.println("Boot number: " + String(bootCount));
+  Serial.println("Onyukleme sayisi: " + String(bootCount));
 
   
   uykudan_uyanma_nedenini_yazdir();
 
   /*
-    First we configure the wake up source
-    We set our ESP32 to wake up for an external trigger.
-    There are two types for ESP32, ext0 and ext1 .
-    ext0 uses RTC_IO to wakeup thus requires RTC peripherals
-    to be on while ext1 uses RTC Controller so does not need
-    peripherals to be powered on.
-    Note that using internal pullups/pulldowns also requires
-    RTC peripherals to be turned on.
+    Önce uyanma kaynağını yapılandırırız
+    ESP32'mizi harici bir tetikleyiciye uyandırdık.
+    ESP32, Ext0 ve Ext1 için iki tür vardır.
+    Ext0, uyandırmak için RTC_IO kullanır, böylece RTC çevre birimleri gerektirir
+    EXT1 RTC denetleyicisini kullanırken açık olmak için ihtiyaç duymaz
+    Çevreseller açılacak.
+    Dahili pullups/pulldowns kullanmanın da gerektirdiğini unutmayın.
+    RTC çevre birimleri açılacak.
   */
 #if USE_EXT0_WAKEUP
   esp_sleep_enable_ext0_wakeup(WAKEUP_GPIO, 1);  //1 = High, 0 = Low
-  // Configure pullup/downs via RTCIO to tie wakeup pins to inactive level during deepsleep.
-  // EXT0 resides in the same power domain (RTC_PERIPH) as the RTC IO pullup/downs.
-  // No need to keep that power domain explicitly, unlike EXT1.
+  /*
+   Derin uyku sırasında uyandırma pinlerini aktif olmayan seviyeye bağlamak için RTCIO üzerinden çekme/çıkışları yapılandırın.
+   EXT0, RTC IO Pullup/Downs ile aynı güç alanında (RTC_PERIPH) bulunur.
+   EXT1'in aksine, bu güç alanını açıkça tutmaya gerek yok.
+  */
   rtc_gpio_pullup_dis(WAKEUP_GPIO);
   rtc_gpio_pulldown_en(WAKEUP_GPIO);
 
@@ -69,11 +70,12 @@ void setup() {
   rtc_gpio_pullup_dis(WAKEUP_GPIO);   // Disable PULL_UP in order to allow it to wakeup on HIGH
 #endif
   //Go to sleep now
-  Serial.println("Going to sleep now");
+  Serial.println("Simdi derin uyku moduna geciyor...");
   esp_deep_sleep_start();
-  Serial.println("This will never be printed");
+  Serial.println("Bu cumle asla basilmayacak");
 }
 
-void loop() {
-  //This is not going to be called
+void loop() 
+{
+  //Buna çağrılmayacak
 }
