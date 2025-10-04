@@ -58,18 +58,18 @@ void setup()
   rtc_gpio_pulldown_en(WAKEUP_GPIO);
 
 #else  // EXT1 WAKEUP
-  //If you were to use ext1, you would use it like
+  
   esp_sleep_enable_ext1_wakeup_io(BUTTON_PIN_BITMASK(WAKEUP_GPIO), ESP_EXT1_WAKEUP_ANY_HIGH);
   /*
-    If there are no external pull-up/downs, tie wakeup pins to inactive level with internal pull-up/downs via RTC IO
-         during deepsleep. However, RTC IO relies on the RTC_PERIPH power domain. Keeping this power domain on will
-         increase some power comsumption. However, if we turn off the RTC_PERIPH domain or if certain chips lack the RTC_PERIPH
-         domain, we will use the HOLD feature to maintain the pull-up and pull-down on the pins during sleep.
+    Harici çekme/çıkışlar yoksa, uyandırma pinlerini RTC IO üzerinden dahili çekme/çıkışlarla aktif olmayan seviyeye bağlayın
+    Deepsleep sırasında. Ancak RTC IO, RTC_PERIPH güç alanına dayanır. Bu güç alanını vasiyetnamede tutmak
+    Biraz güç gelişimini artırın. Ancak, RTC_PERIPH etki alanını kapatırsak veya bazı yongalar RTC_PERIPH yoksa
+    Domain, uyku sırasında pimlerin çekilmesini ve aşağı çekilmesini korumak için bekletme özelliğini kullanacağız.
   */
-  rtc_gpio_pulldown_en(WAKEUP_GPIO);  // GPIO33 is tie to GND in order to wake up in HIGH
-  rtc_gpio_pullup_dis(WAKEUP_GPIO);   // Disable PULL_UP in order to allow it to wakeup on HIGH
+  rtc_gpio_pulldown_en(WAKEUP_GPIO);  // GPIO33, HIGH'da uyanmak için GND'ye bağlamıştır
+  rtc_gpio_pullup_dis(WAKEUP_GPIO);   // HIGH'da uyanmasına izin vermek için pull_up'u devre dışı bırakın
 #endif
-  //Go to sleep now
+  
   Serial.println("Simdi derin uyku moduna geciyor...");
   esp_deep_sleep_start();
   Serial.println("Bu cumle asla basilmayacak");
