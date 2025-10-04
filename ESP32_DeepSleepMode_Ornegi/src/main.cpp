@@ -2,8 +2,9 @@
 #include "driver/rtc_io.h"
 
 #define BUTTON_PIN_BITMASK(GPIO) (1ULL << GPIO)  // 2 ^ GPIO_NUMBER in hex
-#define KULLANILACAK_WAKEUP         1               // 1 = EXT0 , 0 = EXT1 , 2 = zamanlayıcı, 3 = Touchpad (Uyandrıma yöntemi seçimi)
-#define WAKEUP_GPIO              GPIO_NUM_33     // Only RTC IO are allowed - ESP32 Pin example
+#define KULLANILACAK_WAKEUP         1              // 1 = EXT0 , 0 = EXT1 , 2 = zamanlayıcı, 3 = Touchpad (Uyandrıma yöntemi seçimi)
+#define WAKEUP_GPIO              GPIO_NUM_33     //  RTC IO 'nun tanımlı pinleri
+#define ZAMANLAYICI_WAKEUP       5000000        // 5 saniye
 RTC_DATA_ATTR int bootCount = 0;
 
 
@@ -21,9 +22,6 @@ void setup()
 
   
   uykudan_uyanma_nedenini_yazdir();
-
-
-
 
   uyandirma_kaynaklarini_yapilandir();
   
@@ -79,7 +77,7 @@ void uyandirma_kaynaklarini_yapilandir()
 
 #elif KULLANILACAK_WAKEUP==2
   // Timer ile uyandırmayı etkinleştir
-  esp_sleep_enable_timer_wakeup(10 * 1000000); // 10 saniye (mikrosan iye cinsinden)
+  esp_sleep_enable_timer_wakeup(ZAMANLAYICI_WAKEUP); //  mikro saniye cinsinden
 
 #elif KULLANILACAK_WAKEUP==3
   // Touch pad ile uyandırmayı etkinleştir
