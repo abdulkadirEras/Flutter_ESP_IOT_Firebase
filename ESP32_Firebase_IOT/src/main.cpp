@@ -112,7 +112,7 @@ void loop()
       sonGondermeZamani = simdikiZaman;
       
 
-      //firebase_verileri_yaz();
+      firebase_verileri_yaz();
       firebaseden_verileri_oku();
 
      
