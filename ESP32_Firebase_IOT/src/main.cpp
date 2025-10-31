@@ -11,8 +11,8 @@
 
 
 //Ağ ve Kimlik bilgileri
-#define WIFI_SSID "REPLACE_WITH_YOUR_SSID"
-#define WIFI_PASSWORD "REPLACE_WITH_YOUR_PASSWORD"
+#define WIFI_SSID "MERCUSYS"//"REPLACE_WITH_YOUR_SSID"
+#define WIFI_PASSWORD "SySeRaSlan938054."//"REPLACE_WITH_YOUR_PASSWORD"
 
 #define Web_API_KEY "AIzaSyBECRKiGiT56X-325BDHjdqOKzIqgHPnM0"//"REPLACE_WITH_YOUR_FIREBASE_PROJECT_API_KEY"//Project Overview den alınan Web API Key
 #define DATABASE_URL "https://iotprojesi-191222-default-rtdb.firebaseio.com/"//"REPLACE_WITH_YOUR_FIREBASE_DATABASE_URL" //Realtime Database'den alınan URL
@@ -112,18 +112,10 @@ void loop()
       sonGondermeZamani = simdikiZaman;
       
 
+      //firebase_verileri_yaz();
+      firebaseden_verileri_oku();
 
-
-      // send a string
-      stringValue = "value_" + String(simdikiZaman);
-      Database.set<String>(aClient, "/test/string", stringValue, islenenVeri, "RTDB_Send_String");
-      // send an int
-      Database.set<int>(aClient, "/test/int", intValue, islenenVeri, "RTDB_Send_Int");
-      intValue++; //increment intValue in every loop
-
-      // send a string
-      floatValue = 0.01 + random (0,100);
-      Database.set<float>(aClient, "/test/float", floatValue, islenenVeri, "RTDB_Send_Float");
+     
     }
   }
 }
@@ -131,6 +123,7 @@ void loop()
 
 void islenenVeri(AsyncResult &aSonuc) 
 {
+  
   if (!aSonuc.isResult())
     return;
 
@@ -149,13 +142,42 @@ void islenenVeri(AsyncResult &aSonuc)
 
 void firebaseden_verileri_oku()
 {
+  
+  Serial.println("Database verileri okunuyor...");
+  firebaseOkuma.SistemAktif = Database.get(aClient, "/Kontrol/SistemAktif");
+  Serial.print("Sistem Aktif: ");
+  Serial.println(firebaseOkuma.SistemAktif);
 
 
+  firebaseOkuma.Depo1SetSicaklik = Database.get(aClient, "/Kontrol/setDepo1Sicaklik");
+  Serial.print("Depo 1 Set Sicaklik: ");
+  Serial.println(firebaseOkuma.Depo1SetSicaklik);
+
+ 
+  firebaseOkuma.Depo2SetSicaklik = Database.get(aClient, "/Kontrol/setDepo2Sicaklik");
+  Serial.print("Depo 2 Set Sicaklik: ");
+  Serial.println(firebaseOkuma.Depo2SetSicaklik);
 }
 
 void firebase_verileri_yaz(void)
 {
+  Serial.println("Database veriler yaziliyor...");
+  // Örnek değerler
+  firebaseYazma.akimDegeri=(uint16_t)random (0,50);
+  Database.set<int>(aClient, "/Olcum/Akim", firebaseYazma.akimDegeri, islenenVeri, "RTDB_Send_Int");
 
-
+  firebaseYazma.depo1Sicaklik=(uint16_t)random (0,100);
+  Database.set<int>(aClient, "/Olcum/Depo1Sicaklik", firebaseYazma.depo1Sicaklik, islenenVeri, "RTDB_Send_Int");
   
+
+  firebaseYazma.depo2Sicaklik=(uint16_t)random (0,100);
+  Database.set<int>(aClient, "/Olcum/Depo2Sicaklik", firebaseYazma.depo2Sicaklik, islenenVeri, "RTDB_Send_Int");
+
+  firebaseYazma.sicaklikDegeri=(uint16_t)random (0,100);
+  Database.set<int>(aClient, "/Olcum/Sicaklik", firebaseYazma.sicaklikDegeri, islenenVeri, "RTDB_Send_Int");
+
+  firebaseYazma.voltajDegeri=(uint16_t)random (0,500);
+  Database.set<int>(aClient, "/Olcum/Voltaj", firebaseYazma.voltajDegeri, islenenVeri, "RTDB_Send_Int");
+
+
 }
