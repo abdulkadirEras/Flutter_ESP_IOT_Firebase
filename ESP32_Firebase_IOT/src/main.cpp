@@ -11,13 +11,13 @@
 
 
 //Ağ ve Kimlik bilgileri
-#define WIFI_SSID "MERCUSYS"//"REPLACE_WITH_YOUR_SSID"
-#define WIFI_PASSWORD "SySeRaSlan938054."//"REPLACE_WITH_YOUR_PASSWORD"
+#define WIFI_SSID "REPLACE_WITH_YOUR_SSID"
+#define WIFI_PASSWORD "REPLACE_WITH_YOUR_PASSWORD"
 
-#define Web_API_KEY "AIzaSyBECRKiGiT56X-325BDHjdqOKzIqgHPnM0"//"REPLACE_WITH_YOUR_FIREBASE_PROJECT_API_KEY"//Project Overview den alınan Web API Key
-#define DATABASE_URL "https://iotprojesi-191222-default-rtdb.firebaseio.com/"//"REPLACE_WITH_YOUR_FIREBASE_DATABASE_URL" //Realtime Database'den alınan URL
-#define USER_EMAIL "aeras@aeras.com"//"REPLACE_WITH_FIREBASE_PROJECT_EMAIL_USER"//Firebase de Authentication da oluşturulan mail ve parola 
-#define USER_PASS "asdqwe"//"REPLACE_WITH_FIREBASE_PROJECT_USER_PASS"
+#define Web_API_KEY "REPLACE_WITH_YOUR_FIREBASE_PROJECT_API_KEY"//Project Overview den alınan Web API Key
+#define DATABASE_URL "REPLACE_WITH_YOUR_FIREBASE_DATABASE_URL" //Realtime Database'den alınan URL
+#define USER_EMAIL "REPLACE_WITH_FIREBASE_PROJECT_EMAIL_USER"//Firebase de Authentication da oluşturulan mail ve parola 
+#define USER_PASS "REPLACE_WITH_FIREBASE_PROJECT_USER_PASS"
 
 #define gondermeAraligi 10000 // 10 saniye
 
