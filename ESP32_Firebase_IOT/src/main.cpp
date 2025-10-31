@@ -23,6 +23,10 @@
 
 // Fonksiyon
 void islenenVeri(AsyncResult &aSonuc);
+void firebaseden_verileri_oku(void);
+void firebase_verileri_yaz(void);
+
+
 
 // Kullanıcı Authentication Giriş
 UserAuth kullanici_auth(Web_API_KEY, USER_EMAIL, USER_PASS);
@@ -48,7 +52,20 @@ typedef struct
   uint8_t SetSicaklik;
 }databaseOkumaDegiskenleri;
 
+typedef struct
+{
+  uint16_t voltajDegeri;
+  uint16_t sicaklikDegeri;
+  uint16_t akimDegeri;
+  uint16_t depo1Sicaklik;
+  uint16_t depo2Sicaklik;
 
+}databaseYazmaDegiskenleri;
+
+
+
+databaseOkumaDegiskenleri firebaseOkuma;
+databaseYazmaDegiskenleri firebaseYazma;
 int intValue = 0;
 float floatValue = 0.01;
 String stringValue = "";
@@ -94,6 +111,9 @@ void loop()
       
       sonGondermeZamani = simdikiZaman;
       
+
+
+
       // send a string
       stringValue = "value_" + String(simdikiZaman);
       Database.set<String>(aClient, "/test/string", stringValue, islenenVeri, "RTDB_Send_String");
@@ -125,4 +145,17 @@ void islenenVeri(AsyncResult &aSonuc)
 
   if (aSonuc.available())
     Firebase.printf("task: %s, payload: %s\n", aSonuc.uid().c_str(), aSonuc.c_str());
+}
+
+void firebaseden_verileri_oku()
+{
+
+
+}
+
+void firebase_verileri_yaz(void)
+{
+
+
+  
 }
