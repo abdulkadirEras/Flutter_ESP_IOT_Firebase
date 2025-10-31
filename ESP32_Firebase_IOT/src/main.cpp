@@ -19,6 +19,7 @@
 #define USER_EMAIL "REPLACE_WITH_FIREBASE_PROJECT_EMAIL_USER"
 #define USER_PASS "REPLACE_WITH_FIREBASE_PROJECT_USER_PASS"
 
+#define gondermeAraligi 10000 // 10 saniye
 
 // Fonksiyon
 void islenenVeri(AsyncResult &aSonuc);
@@ -35,7 +36,7 @@ RealtimeDatabase Database;
 
 // Timer variables for sending data every 10 seconds
 unsigned long sonGondermeZamani = 0;
-const unsigned long gondermeAraligi = 10000; // 10 saniye
+
 
 // Database gönderilecek değişkenler
 int intValue = 0;
@@ -104,13 +105,13 @@ void islenenVeri(AsyncResult &aSonuc)
     return;
 
   if (aSonuc.isEvent())
-    Firebase.printf("event task: %s, msg: %s, code: %d\n", aSonuc.uid().c_str(), aSonuc.eventLog().message().c_str(), aSonuc.eventLog().code());
+    Firebase.printf("event task: %s, mesaj: %s, kod: %d\n", aSonuc.uid().c_str(), aSonuc.eventLog().message().c_str(), aSonuc.eventLog().code());
 
   if (aSonuc.isDebug())
-    Firebase.printf("Debug task: %s, msg: %s\n", aSonuc.uid().c_str(), aSonuc.debug().c_str());
+    Firebase.printf("Debug task: %s, mesaj: %s\n", aSonuc.uid().c_str(), aSonuc.debug().c_str());
 
   if (aSonuc.isError())
-    Firebase.printf("Error task: %s, msg: %s, code: %d\n", aSonuc.uid().c_str(), aSonuc.error().message().c_str(), aSonuc.error().code());
+    Firebase.printf("Error task: %s, mesaj: %s, kod: %d\n", aSonuc.uid().c_str(), aSonuc.error().message().c_str(), aSonuc.error().code());
 
   if (aSonuc.available())
     Firebase.printf("task: %s, payload: %s\n", aSonuc.uid().c_str(), aSonuc.c_str());
