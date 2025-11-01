@@ -45,16 +45,16 @@ The project demonstrates my competencies in both embedded systems hardware-softw
 
 Bu proje, temel olarak bir **Realtime veri Köprüsü** görevi görmektedir. | This project basically acts as a **Realtime data Bridge**.
 
-<img width="1179" height="2556" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 08 14" src="https://github.com/user-attachments/assets/124b8540-0c91-4710-99b5-3044ff9a01e7" />               <img width="1179" height="2556" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 09 24" src="https://github.com/user-attachments/assets/b44459ec-3d87-43eb-853d-ea9fd9dad9c7" />
+<img width="200" height="300" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 08 14" src="https://github.com/user-attachments/assets/124b8540-0c91-4710-99b5-3044ff9a01e7" />               <img width="200" height="300" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 09 24" src="https://github.com/user-attachments/assets/b44459ec-3d87-43eb-853d-ea9fd9dad9c7" />
 
 ---
 
-<img width="1179" height="2556" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 09 59" src="https://github.com/user-attachments/assets/683a5cac-dfb6-4de1-ad73-c0013431e8d6" />
+<img width="200" height="300" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 09 59" src="https://github.com/user-attachments/assets/683a5cac-dfb6-4de1-ad73-c0013431e8d6" />
 
 
 ---
 
-<img width="1179" height="2556" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 11 08" src="https://github.com/user-attachments/assets/6c291916-f0be-4a37-b815-0fe2e0cdab5d" />
+<img width="200" height="300" alt="Simulator Screenshot - iPhone 16 - 2025-11-01 at 11 11 08" src="https://github.com/user-attachments/assets/6c291916-f0be-4a37-b815-0fe2e0cdab5d" />
 
 
 
