@@ -1,6 +1,6 @@
 # iot_app
 
-A new Flutter project.
+ESP32 ile Firebase üzerinden veri alış-verişi uygulaması
 
 ## Getting Started
 
